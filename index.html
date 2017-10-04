@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8"/>
+	<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1, user-scalable=no"/>
+	<meta name="apple-mobile-web-app-capable" content="yes"/>
+	<meta name="apple-touch-fullscreen" content="yes"/>
+	<meta name="msapplication-tap-highlight" content="no"/>
+	<title>Stress test!</title>
+	<link rel="stylesheet" href="paper.css"/>
+	<script src="/dist/jquery.js"></script>
+	<script src="/dist/paper-full.min.js"></script>
+	<script src="/dist/codemirror.js"></script>
+	<script src="/dist/scripts.js"></script>
+	<script>
+	var _gaq = _gaq || [];
+	_gaq.push(['_setAccount', 'UA-10082945-6']);
+	_gaq.push(['_trackPageview']);
+	(function() {
+		var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+		ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+		var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+	})();
+	</script>
+</head>
+<body class="fullscreen">
+	<h1>go crazy</h1>
+	<article>
+		<div class="paperscript">
+			<script type="text/paperscript" canvas="canvas-1">
+			// The amount of points in the path:
+			var points = 25;
+
+			// The distance between the points:
+			var length = 35;
+
+			var path = new Path({
+				strokeColor: '#E4141B',
+				strokeWidth: 20,
+				strokeCap: 'round'
+			});
+
+			var start = view.center / [10, 1];
+			for (var i = 0; i < points; i++)
+			path.add(start + new Point(i * length, 0));
+
+			function onMouseMove(event) {
+				path.firstSegment.point = event.point;
+				for (var i = 0; i < points - 1; i++) {
+					var segment = path.segments[i];
+					var nextSegment = segment.next;
+					var vector = segment.point - nextSegment.point;
+					vector.length = length;
+					nextSegment.point = segment.point - vector;
+				}
+				path.smooth({ type: 'continuous' });
+			}
+
+			function onMouseDown(event) {
+				path.fullySelected = true;
+				path.strokeColor = '#e08285';
+			}
+
+			function onMouseUp(event) {
+				path.fullySelected = false;
+				path.strokeColor = '#e4141b';
+			}
+			</script>
+			<div class="canvas">
+				<canvas resize="true" id="canvas-1"></canvas>
+			</div>
+		</div>
+	</article>
+</body>
